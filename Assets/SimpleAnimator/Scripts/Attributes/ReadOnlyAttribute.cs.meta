@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5c539ce44a2f05049a993020c8746638
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Scripts/Attributes/ReadOnlyAttribute.cs
+  uploadId: 751740

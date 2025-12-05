@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: d468a31adc0040f9ac0601470146a455
+timeCreated: 1745342245
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Scripts/Attributes/BoxAttribute.cs
+  uploadId: 751740

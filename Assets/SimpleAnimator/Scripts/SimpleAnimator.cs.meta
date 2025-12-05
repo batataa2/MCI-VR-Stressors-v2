@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: a8087a6718cab0942b03750ab3ca336d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - stateList: {fileID: 11400000, guid: 69497c8f7f6c09a4dac53cad76d14a24, type: 2}
+  - defaultAnimationList: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Scripts/SimpleAnimator.cs
+  uploadId: 751740

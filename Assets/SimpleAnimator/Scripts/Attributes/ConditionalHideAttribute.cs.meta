@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 106d6d16ef0e4860bc16d87c38fe3a5e
+timeCreated: 1743963935
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Scripts/Attributes/ConditionalHideAttribute.cs
+  uploadId: 751740

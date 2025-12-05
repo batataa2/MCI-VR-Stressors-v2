@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: b69854ee5f564ea09924b84fa00fb424
+timeCreated: 1744050854
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Scripts/AnimationLayerList.cs
+  uploadId: 751740

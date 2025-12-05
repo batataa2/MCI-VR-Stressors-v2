@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 96ccc0ad3b96eb74cb396739a67147bb
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Examples/SharedDemoAssets/Prefabs/Bot.prefab
+  uploadId: 751740

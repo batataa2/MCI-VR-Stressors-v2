@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0276811dc7df4da469c942ce5b670130
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Examples/SharedDemoAssets/Animations/Normal/Bot
+    - Run To Stop.anim
+  uploadId: 751740

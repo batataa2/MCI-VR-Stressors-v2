@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0218238e3d7582e44b835028cc9edc0e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Examples/SharedDemoAssets/Animations/Normal/Bot
+    - Idle - Offensive Idle.anim
+  uploadId: 751740

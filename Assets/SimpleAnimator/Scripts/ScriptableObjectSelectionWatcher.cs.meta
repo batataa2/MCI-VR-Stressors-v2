@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 012efc9a66fc4707b1fac1a70e829d7b
+timeCreated: 1742847331
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Scripts/ScriptableObjectSelectionWatcher.cs
+  uploadId: 751740

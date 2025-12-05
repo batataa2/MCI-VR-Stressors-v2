@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 08cdf9ec683b4d9448f3954e98c36b64
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - animationConfig: {fileID: 11400000, guid: f82b991476469aa468d973f118bb016e, type: 2}
+  - animationClip: {instanceID: 0}
+  - nextAnimation: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Scripts/AnimationData.cs
+  uploadId: 751740

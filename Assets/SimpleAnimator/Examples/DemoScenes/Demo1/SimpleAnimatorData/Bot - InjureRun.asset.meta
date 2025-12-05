@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 047c0dc673319c8458959766c8e065b9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Examples/DemoScenes/Demo1/SimpleAnimatorData/Bot
+    - InjureRun.asset
+  uploadId: 751740

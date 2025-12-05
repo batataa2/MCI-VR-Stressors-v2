@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: e27e8e91d0729f445a219754ac6fea2f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Examples/DemoScenes/Demo1/SimpleAnimatorData/Bot
+    - NormalAim.asset
+  uploadId: 751740

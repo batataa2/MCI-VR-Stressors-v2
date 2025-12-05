@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 294d815b9a35b184f9491bd7e8cbe078
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 31900000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Examples/SharedDemoAssets/Masks/Bot - Base.mask
+  uploadId: 751740

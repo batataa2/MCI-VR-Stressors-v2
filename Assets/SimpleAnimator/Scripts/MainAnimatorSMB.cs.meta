@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 39d84905df5fc3b46852f7c7c6cc8168
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Scripts/MainAnimatorSMB.cs
+  uploadId: 751740

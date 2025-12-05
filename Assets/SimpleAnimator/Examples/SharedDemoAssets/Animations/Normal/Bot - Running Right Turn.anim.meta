@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 74242cf4a01fe1046b87f60d45e174bf
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Examples/SharedDemoAssets/Animations/Normal/Bot
+    - Running Right Turn.anim
+  uploadId: 751740

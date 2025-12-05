@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1bde531d7db46074396b91f7c8f348f7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Examples/SharedDemoAssets/Animations/Normal/Bot
+    - Idle - Happy Idle.anim
+  uploadId: 751740

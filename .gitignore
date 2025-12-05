@@ -1,0 +1,21 @@
+# Unity generated folders
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+UserSettings/
+MemoryCaptures/
+
+# OS / IDE junk
+.vs/
+.vscode/
+*.csproj
+*.sln
+*.user
+*.unityproj
+.idea/
+
+# Crash reports
+sysinfo.txt

@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 1eabb2285a1c40539745087e9429086d
+timeCreated: 1744137921
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Scripts/Attributes/DinamicDropdownAttribute.cs
+  uploadId: 751740

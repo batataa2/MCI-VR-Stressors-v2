@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 222bd715dea5e974183db97ed2463876
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Examples/SharedDemoAssets/Animations/Injure/Bot
+    - Injured Turn Left.anim
+  uploadId: 751740

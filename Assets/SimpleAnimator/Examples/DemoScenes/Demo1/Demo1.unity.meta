@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0f3534d568cf4b34e96e0fe96818c3a1
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Examples/DemoScenes/Demo1/Demo1.unity
+  uploadId: 751740

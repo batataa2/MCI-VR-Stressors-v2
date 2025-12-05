@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8b0a9c347e5244645a96791c2fcfd9ae
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 315997
+  packageName: Simple Animator
+  packageVersion: 1.0
+  assetPath: Assets/SimpleAnimator/Examples/SharedDemoAssets/Animations/Injure/Bot
+    - Injured Idle.anim
+  uploadId: 751740
