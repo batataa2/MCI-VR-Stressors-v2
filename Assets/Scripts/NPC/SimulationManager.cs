@@ -9,27 +9,31 @@ public class SimulationManager : MonoBehaviour
     public AudioSource ambientNoise;
 
     [Header("Stressor 1 – Timer")]
-    public TimerStressor timer;     // <- WICHTIG!
+    public TimerStressor timer;
 
-    [Header("Stressor-System (optional, später)")]
-    public GameObject[] stressors;   // Feuer, Rauch, Schreie – aktuell noch inaktiv
+    [Header("Stressor 2 – Crying NPCs")]
+    public CryingStressor[] cryingStressors;   // mehrere weinende NPCs möglich
 
     private bool simulationRunning = false;
+    private int currentPatientIndex = 0;
+
+    private void OnEnable()
+    {
+        NPCInteraction.OnTriageCompleted += HandleTriageCompleted;
+    }
+
+    private void OnDisable()
+    {
+        NPCInteraction.OnTriageCompleted -= HandleTriageCompleted;
+    }
 
     void Start()
     {
-        // Patienten deaktivieren
+        // Alle Patienten ausschalten
         if (patientNPCs != null)
         {
             foreach (var npc in patientNPCs)
                 npc.SetActive(false);
-        }
-
-        // Stressoren deaktivieren
-        if (stressors != null)
-        {
-            foreach (var s in stressors)
-                s.SetActive(false);
         }
     }
 
@@ -45,7 +49,7 @@ public class SimulationManager : MonoBehaviour
 
         Debug.Log("<color=green>SIMULATION STARTED</color>");
 
-        // TIMER STARTEN
+        // TIMER starten
         if (timer != null)
         {
             Debug.Log("DEBUG: StartTimer() wird aufgerufen");
@@ -56,22 +60,57 @@ public class SimulationManager : MonoBehaviour
             Debug.LogError("DEBUG: Timer ist NICHT verknüpft!");
         }
 
-        // GRUNDGERÄUSCHE STARTEN
+        // Ambient Noise starten
         if (ambientNoise != null)
             ambientNoise.Play();
 
-        // ERSTEN PATIENTEN AKTIVIEREN
+        // ERSTEN Patienten sichtbar machen
         if (patientNPCs != null && patientNPCs.Length > 0)
         {
-            Debug.Log("DEBUG: Patient 1 wurde aktiviert");
+            currentPatientIndex = 0;
             patientNPCs[0].SetActive(true);
+            Debug.Log("DEBUG: Patient 1 wurde aktiviert");
         }
         else
         {
             Debug.LogWarning("SimulationManager: Keine Patienten zugewiesen!");
         }
 
-        // Hier später: Stressoren sequenziell starten
-        // StartCoroutine(StartStressorsDelayed());
+        // Weinende NPCs starten
+        foreach (var stressor in cryingStressors)
+        {
+            if (stressor != null)
+                stressor.StartStressor();
+        }
+    }
+
+    // Wird aufgerufen wenn ein NPC triagiert wurde
+    private void HandleTriageCompleted(NPCInteraction npc)
+    {
+        Debug.Log("DEBUG: Triage abgeschlossen von: " + npc.name);
+
+        // WEINEN langsam ausfaden
+        foreach (var stressor in cryingStressors)
+        {
+            if (stressor != null)
+                stressor.FadeOut();
+        }
+
+        // NÄCHSTEN Patienten aktivieren
+        ActivateNextPatient();
+    }
+
+    private void ActivateNextPatient()
+    {
+        currentPatientIndex++;
+
+        if (currentPatientIndex >= patientNPCs.Length)
+        {
+            Debug.Log("<color=yellow>Alle Patienten abgearbeitet!</color>");
+            return;
+        }
+
+        Debug.Log($"DEBUG: Patient {currentPatientIndex + 1} wird aktiviert");
+        patientNPCs[currentPatientIndex].SetActive(true);
     }
 }
