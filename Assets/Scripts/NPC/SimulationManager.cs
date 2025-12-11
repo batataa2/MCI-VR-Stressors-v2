@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class SimulationManager : MonoBehaviour
 {
+    [Header("NPCs die während Stressoren sichtbar werden sollen")]
+    public GameObject[] stressorNPCs;   // z.B. weinende Menschen
+
     [Header("NPCs (werden nacheinander aktiviert)")]
-    public GameObject[] patientNPCs;
+    public GameObject[] patientNPCs;    // Patienten, mit denen Triage durchgeführt wird
 
     [Header("Audio")]
     public AudioSource ambientNoise;
@@ -12,11 +15,16 @@ public class SimulationManager : MonoBehaviour
     public TimerStressor timer;
 
     [Header("Stressor 2 – Crying NPCs")]
-    public CryingStressor[] cryingStressors;   // mehrere weinende NPCs möglich
+    public CryingStressor[] cryingStressors;
+
+    [Header("Stressor 2 – Smoke")]
+    public SmokeStressor smokeStressor;
+    public FogStressor fogStressor;
 
     private bool simulationRunning = false;
     private int currentPatientIndex = 0;
 
+    // Events abonnieren
     private void OnEnable()
     {
         NPCInteraction.OnTriageCompleted += HandleTriageCompleted;
@@ -29,10 +37,17 @@ public class SimulationManager : MonoBehaviour
 
     void Start()
     {
-        // Alle Patienten ausschalten
+        // Alle Patienten unsichtbar machen
         if (patientNPCs != null)
         {
             foreach (var npc in patientNPCs)
+                npc.SetActive(false);
+        }
+
+        // NPCs für Stressoren ebenfalls unsichtbar machen
+        if (stressorNPCs != null)
+        {
+            foreach (var npc in stressorNPCs)
                 npc.SetActive(false);
         }
     }
@@ -44,7 +59,6 @@ public class SimulationManager : MonoBehaviour
 
         if (simulationRunning)
             return;
-
         simulationRunning = true;
 
         Debug.Log("<color=green>SIMULATION STARTED</color>");
@@ -64,7 +78,7 @@ public class SimulationManager : MonoBehaviour
         if (ambientNoise != null)
             ambientNoise.Play();
 
-        // ERSTEN Patienten sichtbar machen
+        // ERSTEN Patienten aktivieren
         if (patientNPCs != null && patientNPCs.Length > 0)
         {
             currentPatientIndex = 0;
@@ -84,21 +98,46 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
-    // Wird aufgerufen wenn ein NPC triagiert wurde
+    // Wird aufgerufen, wenn ein NPC triagiert wurde
     private void HandleTriageCompleted(NPCInteraction npc)
     {
         Debug.Log("DEBUG: Triage abgeschlossen von: " + npc.name);
 
-        // WEINEN langsam ausfaden
-        foreach (var stressor in cryingStressors)
+        // Nächsten Patienten aktivieren
+        ActivateNextPatient();
+
+        // ------------------------------------------------------
+        // WICHTIG: Rauch und Fog erst nach Patient 2 starten
+        // ------------------------------------------------------
+        if (currentPatientIndex == 2) // Patient 1=Index0, Patient 2=Index1 → nächster ist 2
         {
-            if (stressor != null)
-                stressor.FadeOut();
+            Debug.Log("<color=orange>Stressor 2 wird aktiviert (Rauch + Fog)</color>");
+
+            // RAUCH starten
+            if (smokeStressor != null)
+                smokeStressor.StartSmoke();
+
+            // FOG starten
+            if (fogStressor != null)
+                fogStressor.StartFogIncrease();
         }
 
-        // NÄCHSTEN Patienten aktivieren
-        ActivateNextPatient();
+        // ------------------------------------------------------
+        // Weinende NPCs nur nach Patient 1 ausfaden
+        // ------------------------------------------------------
+        if (currentPatientIndex == 1)
+        {
+            Debug.Log("<color=yellow>Crying Stressor wird ausgeblendet</color>");
+
+            foreach (var stressor in cryingStressors)
+            {
+                if (stressor != null)
+                    stressor.FadeOut();
+            }
+        }
     }
+
+
 
     private void ActivateNextPatient()
     {
