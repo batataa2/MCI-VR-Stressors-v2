@@ -2,47 +2,82 @@ using UnityEngine;
 
 public class EndSimulationInteraction : MonoBehaviour
 {
-    [Header("UI")]
+    public GameObject panelInteract;
     public GameObject panelEndSimulation;
+
+    public ScoreboardController scoreboardController;
+    public TimerStressor mainTimer;
+
+    private bool simulationEnded = false;
 
     private void Start()
     {
-        if (panelEndSimulation != null)
-            panelEndSimulation.SetActive(false);
+        panelEndSimulation?.SetActive(false);
+
+        if (scoreboardController != null)
+            scoreboardController.gameObject.SetActive(false);
     }
 
-    // Wird vom Interact-Button / Interact-System aufgerufen
     public void Interact()
     {
-        if (panelEndSimulation != null)
-            panelEndSimulation.SetActive(true);
+        if (simulationEnded) return;
+
+        panelInteract?.SetActive(false);
+        panelEndSimulation?.SetActive(true);
     }
 
-    // NO-Button
     public void BackToSimulation()
     {
-        if (panelEndSimulation != null)
-            panelEndSimulation.SetActive(false);
+        panelEndSimulation?.SetActive(false);
+        panelInteract?.SetActive(true);
     }
 
-    // YES-Button
     public void EndSimulation()
     {
+        if (simulationEnded) return;
+        simulationEnded = true;
+
         Debug.Log("<color=red>SIMULATION ENDED BY USER</color>");
 
-        // Evaluation finalisieren
-        SimulationEvaluationManager.Instance.EndSimulation();
+        // -----------------------------
+        // TIMER STOPPEN & ZEIT HOLEN
+        // -----------------------------
+        if (mainTimer == null)
+        {
+            Debug.LogError("[EndSimulation] mainTimer ist NICHT zugewiesen!");
+            return;
+        }
 
-        // Simulation einfrieren
+        mainTimer.StopTimer();
+        float duration = mainTimer.GetElapsedTime();
+
+        // -----------------------------
+        // EVALUATION FINALISIEREN
+        // -----------------------------
+        if (SimulationEvaluationManager.Instance == null)
+        {
+            Debug.LogError("[EndSimulation] SimulationEvaluationManager fehlt!");
+            return;
+        }
+
+        SimulationEvaluationManager.Instance.EndSimulation(duration);
+
+        // -----------------------------
+        // SIMULATION DEAKTIVIEREN
+        // -----------------------------
         var sim = FindAnyObjectByType<SimulationManager>();
         if (sim != null)
+        {
+            sim.LockAllNPCInteractions();
             sim.enabled = false;
+        }
 
-        // UI schließen
-        if (panelEndSimulation != null)
-            panelEndSimulation.SetActive(false);
+        // -----------------------------
+        // UI WECHSEL
+        // -----------------------------
+        panelEndSimulation?.SetActive(false);
+        panelInteract?.SetActive(false);
 
-        // Optional später:
-        // SceneManager.LoadScene("MainMenu");
+        scoreboardController.ShowScoreboard();
     }
 }

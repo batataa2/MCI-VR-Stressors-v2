@@ -17,17 +17,23 @@ public class TimerStressor : MonoBehaviour
         int minutes = Mathf.FloorToInt(elapsedTime / 60);
         int seconds = Mathf.FloorToInt(elapsedTime % 60);
 
-        timerText.text = $"{minutes:00}:{seconds:00}";
+        if (timerText != null)
+            timerText.text = $"{minutes:00}:{seconds:00}";
     }
 
     public void StartTimer()
     {
-        elapsedTime = 0;
+        elapsedTime = 0f;
         timerRunning = true;
     }
 
     public void StopTimer()
     {
         timerRunning = false;
+    }
+
+    public float GetElapsedTime()
+    {
+        return elapsedTime;
     }
 }

@@ -2,23 +2,26 @@ using UnityEngine;
 
 public class SimulationManager : MonoBehaviour
 {
-    [Header("Patienten (Triagierbar, Reihenfolge!)")]
+    [Header("Patienten (Reihenfolge!)")]
     public GameObject[] patientNPCs;
+
+    [Header("End Simulation NPC")]
+    public GameObject endSimulationNPC;
 
     [Header("Audio")]
     public AudioSource ambientNoise;
 
-    [Header("Stressor 1 Globaler Timer")]
+    [Header("Stressor 1 – Timer")]
     public TimerStressor mainTimer;
 
-    [Header("Stressor 2 Crying")]
+    [Header("Stressor 2 – Crying")]
     public CryingStressor[] cryingStressors;
 
-    [Header("Stressor 3 Smoke + Fog")]
+    [Header("Stressor 3 – Smoke + Fog")]
     public SmokeStressor smokeStressor;
     public FogStressor fogStressor;
 
-    [Header("Stressor 4 Fire")]
+    [Header("Stressor 4 – Fire")]
     public FireEvolutionController[] fireStressors;
 
     private int currentPatientIndex = -1;
@@ -36,9 +39,11 @@ public class SimulationManager : MonoBehaviour
 
     private void Start()
     {
-        if (patientNPCs != null)
-            foreach (var npc in patientNPCs)
-                if (npc != null) npc.SetActive(false);
+        foreach (var npc in patientNPCs)
+            if (npc != null) npc.SetActive(false);
+
+        if (endSimulationNPC != null)
+            endSimulationNPC.SetActive(false);
     }
 
     public void BeginSimulation()
@@ -46,140 +51,106 @@ public class SimulationManager : MonoBehaviour
         if (simulationRunning) return;
         simulationRunning = true;
 
-        Debug.Log("<color=green>SIMULATION STARTED</color>");
+        SimulationEvaluationManager.Instance.StartSimulation();
 
         mainTimer?.StartTimer();
+        ambientNoise?.Play();
 
-        if (ambientNoise != null)
-            ambientNoise.Play(); // <- sonst bekommst du die “ambientNoise not assigned” Meldung
+        foreach (var c in cryingStressors)
+            c?.StartStressor();
 
-        if (cryingStressors != null)
-            foreach (var c in cryingStressors)
-                if (c != null) c.StartStressor();
+        ActivatePatient(0);
 
-        ActivatePatient(0); // Patient 1
+        if (endSimulationNPC != null)
+            endSimulationNPC.SetActive(true);
     }
 
     private void HandleTriageCompleted(NPCInteraction npc)
     {
-        if (!simulationRunning) return;
-        if (npc == null) return;
+        if (!simulationRunning || npc == null) return;
 
-        // Best effort: finde Index des NPC, aber blockiere NICHT wenn’s komisch ist
-        int completedIndex = IndexOfPatient(npc.gameObject);
-        Debug.Log($"[SIM] Triage completed by: {npc.name} | idx={completedIndex} | currentIdx={currentPatientIndex}");
+        int idx = IndexOfPatient(npc.gameObject);
+        if (idx >= 0)
+            currentPatientIndex = idx;
 
-        // Falls wir ihn finden, syncen wir currentPatientIndex darauf (damit die Trigger stimmen)
-        if (completedIndex >= 0)
-            currentPatientIndex = completedIndex;
-
-        // -----------------------------
-        // Trigger nach Patient 2 (Index 1)
-        // -----------------------------
+        // -------------------------
+        // NACH PATIENT 2 → RAUCH
+        // -------------------------
         if (currentPatientIndex == 1)
         {
-            if (cryingStressors != null)
-                foreach (var c in cryingStressors)
-                    if (c != null) c.FadeOut();
+            foreach (var c in cryingStressors)
+                c?.FadeOut();
 
             smokeStressor?.StartSmoke();
             fogStressor?.StartFogIncrease();
 
             HUDMessageController.Instance?.ShowPersistentMessage(
-                "RAUCH BREITET SICH AUS – SICHT EINGESCHRÄNKT!"
+                "⚠️ RAUCH BREITET SICH AUS – SICHT EINGESCHRÄNKT!"
             );
         }
 
-        // -----------------------------
-        // Trigger nach Patient 4 (Index 3)
-        // -----------------------------
+        // -------------------------
+        // NACH PATIENT 4 → FEUER
+        // -------------------------
         if (currentPatientIndex == 3)
         {
-            if (fireStressors != null)
-                foreach (var fire in fireStressors)
-                    if (fire != null) fire.BeginFire();
+            foreach (var f in fireStressors)
+                f?.BeginFire();
 
             HUDMessageController.Instance?.ShowPersistentMessage(
-                "FEUER BRICHT AUS! TRIAGIERE SCHNELL!"
+                "🔥 FEUER BRICHT AUS! TRIAGIERE SCHNELL!"
             );
         }
 
-        // -----------------------------
-        // Trigger nach Patient 7 (Index 6)
-        // -----------------------------
+        // -------------------------
+        // NACH PATIENT 7 → ENDE
+        // -------------------------
         if (currentPatientIndex == 6)
         {
-            if (fireStressors != null)
-                foreach (var fire in fireStressors)
-                    if (fire != null) fire.ExtinguishFire();
+            foreach (var f in fireStressors)
+                f?.ExtinguishFire();
 
-            fogStressor?.StopFog();
             smokeStressor?.StopSmoke();
+            fogStressor?.StopFog();
 
             HUDMessageController.Instance?.ShowPersistentMessage(
-                "FEUERWEHR VOR ORT – LAGE UNTER KONTROLLE"
+                "🚒 FEUERWEHR VOR ORT – LAGE UNTER KONTROLLE"
             );
 
-            Invoke(nameof(ClearHUDMessage), 4f);
-
-            Debug.Log("<color=yellow>Simulation beendet</color>");
+            Invoke(nameof(ClearHUD), 4f);
             return;
         }
 
-        // Nächster Patient
         ActivatePatient(currentPatientIndex + 1);
     }
 
     private void ActivatePatient(int index)
     {
-        if (patientNPCs == null || patientNPCs.Length == 0) return;
-
-        if (index < 0 || index >= patientNPCs.Length)
-        {
-            Debug.LogWarning($"[SIM] ActivatePatient out of range: {index}");
-            return;
-        }
+        if (index < 0 || index >= patientNPCs.Length) return;
 
         currentPatientIndex = index;
+        patientNPCs[index].SetActive(true);
+    }
 
-        var go = patientNPCs[index];
-        if (go == null)
-        {
-            Debug.LogError($"[SIM] patientNPCs[{index}] is NULL!");
-            return;
-        }
-
-        // WICHTIG: Wenn ein Parent-Objekt deaktiviert ist, bringt SetActive(true) am Kind nix (activeInHierarchy bleibt false)
-        if (go.transform.parent != null && !go.transform.parent.gameObject.activeInHierarchy)
-            Debug.LogWarning($"[SIM] Parent of {go.name} is inactive -> NPC won’t be visible until parent is active.");
-
-        go.SetActive(true);
-
-        Debug.Log($"[SIM] Activated patient {index + 1}: {go.name} | activeSelf={go.activeSelf} | activeInHierarchy={go.activeInHierarchy}");
+    public void LockAllNPCInteractions()
+    {
+        foreach (var npc in FindObjectsOfType<NPCInteraction>(true))
+            npc.enabled = false;
     }
 
     private int IndexOfPatient(GameObject go)
     {
-        if (go == null || patientNPCs == null) return -1;
-
-        // root ist sicherer, falls NPCInteraction auf Child hängt
         var root = go.transform.root.gameObject;
 
         for (int i = 0; i < patientNPCs.Length; i++)
         {
-            if (patientNPCs[i] == null) continue;
-
-            if (patientNPCs[i] == go) return i;
-            if (patientNPCs[i] == root) return i;
-
-            if (go.transform.IsChildOf(patientNPCs[i].transform)) return i;
-            if (patientNPCs[i].transform.IsChildOf(go.transform)) return i;
+            if (patientNPCs[i] == root)
+                return i;
         }
-
         return -1;
     }
 
-    private void ClearHUDMessage()
+    private void ClearHUD()
     {
         HUDMessageController.Instance?.ClearMessage();
     }

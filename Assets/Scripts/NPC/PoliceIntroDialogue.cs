@@ -82,18 +82,30 @@ public class PoliceIntroDialogue : MonoBehaviour
     }
 
     public void StartSimulation()
+{
+    Debug.Log("[PoliceIntro] StartSimulation pressed");
+
+    // Audio stoppen
+    if (audioSource != null)
+        audioSource.Stop();
+
+    // Dialog-Panel aus
+    panelDialogue.SetActive(false);
+
+    // gesamtes Intro-Canvas aus
+    if (rootCanvas != null)
+        rootCanvas.SetActive(false);
+
+    // Simulation starten (EINZIGER Startpunkt)
+    var sim = FindAnyObjectByType<SimulationManager>();
+    if (sim != null)
     {
-        Debug.Log("Simulation begins!");
-
-        // gesamte UI ausblenden
-        if (rootCanvas != null)
-            rootCanvas.SetActive(false);
-
-        // Simulation starten
-        var sim = FindAnyObjectByType<SimulationManager>();
-        if (sim != null)
-            sim.BeginSimulation();
-        else
-            Debug.LogWarning("SimulationManager not found!");
+        sim.BeginSimulation();
     }
+    else
+    {
+        Debug.LogError("[PoliceIntro] SimulationManager not found!");
+    }
+}
+
 }

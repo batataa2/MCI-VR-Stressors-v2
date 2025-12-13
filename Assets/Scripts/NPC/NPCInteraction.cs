@@ -3,9 +3,6 @@ using System;
 
 public class NPCInteraction : MonoBehaviour
 {
-    [Header("Triage (pro Patient im Inspector setzen)")]
-    [SerializeField] private string recommendedTriage = "UNKNOWN";
-
     [Header("References")]
     public NPCCondition condition;
     public AudioSource audioSource;
@@ -17,7 +14,7 @@ public class NPCInteraction : MonoBehaviour
     public GameObject panelTriage;
     public GameObject panelConfirmFinish;
 
-    [Header("Vital Text Fields")]
+    [Header("Vital Texts")]
     public TMPro.TextMeshProUGUI BP;
     public TMPro.TextMeshProUGUI Pulse;
     public TMPro.TextMeshProUGUI Tmp;
@@ -26,10 +23,8 @@ public class NPCInteraction : MonoBehaviour
     public TMPro.TextMeshProUGUI Hurt_Status;
 
     private string pendingTriageColor = null;
-
-    private bool dialogPlayedOnce = false;
     private bool finished = false;
-
+    private bool dialogPlayedOnce = false;
     private float firstInteractTime = -1f;
 
     public static event Action<NPCInteraction> OnTriageCompleted;
@@ -62,106 +57,76 @@ public class NPCInteraction : MonoBehaviour
 
     public void PlayNPCDialog()
     {
-        if (condition == null || condition.speechClip == null) return;
-        if (audioSource == null) return;
-
+        if (condition?.speechClip == null || audioSource == null) return;
         audioSource.Stop();
         audioSource.clip = condition.speechClip;
         audioSource.Play();
     }
 
-    // ----------------------------
-    // PANEL STEUERUNG
-    // ----------------------------
     public void ShowMainMenu()
     {
-        if (panelMainMenu) panelMainMenu.SetActive(true);
-        if (panelVitalInfo) panelVitalInfo.SetActive(false);
-        if (panelTriage) panelTriage.SetActive(false);
-        if (panelConfirmFinish) panelConfirmFinish.SetActive(false);
+        panelMainMenu?.SetActive(true);
+        panelVitalInfo?.SetActive(false);
+        panelTriage?.SetActive(false);
+        panelConfirmFinish?.SetActive(false);
     }
 
     public void ShowVitalInfo()
     {
-        if (condition == null) return;
+        BP.text = $"Blood Pressure: {condition.bloodPressure}";
+        Pulse.text = $"Pulse: {condition.pulse}";
+        Tmp.text = $"Temperature: {condition.temperature}";
+        Spo2.text = $"SpO2: {condition.oxygenSaturation}";
+        Hurt_Status.text = condition.injuryDescription;
+        Breathing.text = condition.isBreathing ? "Breathing: Yes" : "Breathing: No";
 
-        if (BP) BP.text = $"Blood Pressure: {condition.bloodPressure} mmHg";
-        if (Pulse) Pulse.text = $"Pulse: {condition.pulse} bpm";
-        if (Tmp) Tmp.text = $"Temperature: {condition.temperature} °C";
-        if (Spo2) Spo2.text = $"SpO2: {condition.oxygenSaturation} %"; // <- kein Sonderzeichen, sonst Font-Warn
-        if (Hurt_Status) Hurt_Status.text = $"Status: {condition.injuryDescription}";
-        if (Breathing) Breathing.text = $"Breathing: {(condition.isBreathing ? "Yes" : "No")}";
-
-        if (panelMainMenu) panelMainMenu.SetActive(false);
-        if (panelVitalInfo) panelVitalInfo.SetActive(true);
+        panelMainMenu?.SetActive(false);
+        panelVitalInfo?.SetActive(true);
     }
 
     public void ShowTriage()
     {
-        if (panelMainMenu) panelMainMenu.SetActive(false);
-        if (panelTriage) panelTriage.SetActive(true);
+        panelMainMenu?.SetActive(false);
+        panelTriage?.SetActive(true);
     }
 
     public void ShowFinishConfirm()
     {
-        if (panelMainMenu) panelMainMenu.SetActive(false);
-        if (panelConfirmFinish) panelConfirmFinish.SetActive(true);
+        panelMainMenu?.SetActive(false);
+        panelConfirmFinish?.SetActive(true);
     }
 
-    public void BackToMainMenu() => ShowMainMenu();
-
-    // ----------------------------
-    // TRIAGE
-    // ----------------------------
     public void SelectTriage(string color)
     {
         pendingTriageColor = color;
-        Debug.Log($"[NPCInteraction] {name} selected triage: {color}");
     }
 
-    // ----------------------------
-    // ABSCHLUSS: auch ohne Triage -> weiter
-    // ----------------------------
     public void ConfirmFinish_Yes()
     {
         if (finished) return;
 
-        bool triageSelected = !string.IsNullOrWhiteSpace(pendingTriageColor);
+        bool triageSelected = !string.IsNullOrEmpty(pendingTriageColor);
         string userChoice = triageSelected ? pendingTriageColor : "NONE";
 
-        if (triageSelected && condition != null)
+        if (triageSelected)
             condition.SetTriageResult(pendingTriageColor);
 
-        float decisionTime = (firstInteractTime >= 0f) ? (Time.time - firstInteractTime) : 0f;
+        float decisionTime = Time.time - firstInteractTime;
 
-        // Evaluation (optional, darf NICHT crashen wenn Instance fehlt)
-        if (SimulationEvaluationManager.Instance != null)
-        {
-            SimulationEvaluationManager.Instance.RegisterTriage(
-            patientId: gameObject.name,
-            recommended: recommendedTriage,
-            userChoice: userChoice,
-            decisionTime: decisionTime,
-            triageCompleted: triageSelected
-            );
-
-        }
-        else
-        {
-            Debug.LogWarning("[NPCInteraction] SimulationEvaluationManager.Instance is NULL -> triage not logged");
-        }
+        SimulationEvaluationManager.Instance.RegisterTriage(
+            gameObject.name,
+            condition.recommendedTriage,
+            userChoice,
+            decisionTime,
+            triageSelected
+        );
 
         finished = true;
         HideAllPanels();
-
-        Debug.Log($"[NPCInteraction] FINISHED: {name} | triageSelected={triageSelected} | userChoice={userChoice}");
         OnTriageCompleted?.Invoke(this);
     }
 
-    public void ConfirmFinish_No()
-    {
-        ShowMainMenu();
-    }
+    public void ConfirmFinish_No() => ShowMainMenu();
 
     private void HideAllPanels()
     {
@@ -171,4 +136,21 @@ public class NPCInteraction : MonoBehaviour
         panelTriage?.SetActive(false);
         panelConfirmFinish?.SetActive(false);
     }
+    public void BackToMainMenu()
+{
+    if (finished)
+        return;
+
+    // alle Panels sicher aus
+    if (panelVitalInfo) panelVitalInfo.SetActive(false);
+    if (panelTriage) panelTriage.SetActive(false);
+    if (panelConfirmFinish) panelConfirmFinish.SetActive(false);
+
+    // Main Menu an
+    if (panelMainMenu)
+        panelMainMenu.SetActive(true);
+
+    Debug.Log($"[NPCInteraction] BackToMainMenu called on {name}");
+}
+
 }
